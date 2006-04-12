@@ -33,7 +33,6 @@ Name:		X11-driver-nvidia
 Version:	%{_nv_ver}.%{_nv_rel}
 Release:	%{_rel}
 License:	nVidia Binary
-Vendor:		nVidia Corp.
 Group:		X11
 # why not pkg0!?
 %if %{need_x86}
@@ -51,15 +50,13 @@ Patch2:		%{name}-conftest.patch
 Patch3:		%{name}-2.6.16-build.patch
 # http://www.nvnews.net/vbulletin/showthread.php?t=62021
 URL:		http://www.nvidia.com/object/linux.html
-BuildRequires:	grep
 %if %{with kernel}
-%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
+%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 3:2.6.7}
 %endif
 BuildRequires:	%{kgcc_package}
+#BuildRequires:	X11-devel >= %{_min_x11}	# disabled for now
 BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	sed >= 4.0
-BuildRequires:	textutils
-#BuildRequires:	X11-devel >= %{_min_x11}	# disabled for now
 BuildConflicts:	XFree86-nvidia
 Requires:	X11-Xserver
 Requires:	X11-libs >= %{_min_x11}
