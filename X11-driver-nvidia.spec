@@ -8,9 +8,9 @@
 %bcond_with	verbose		# verbose build (V=1)
 #
 %define		_nv_ver		1.0
-%define		_nv_rel		8178
+%define		_nv_rel		8756
 %define		_min_x11	6.7.0
-%define		_rel		5
+%define		_rel		1
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -37,18 +37,15 @@ Group:		X11
 # why not pkg0!?
 %if %{need_x86}
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	bc9d459bfeee93735e3959de041635df
+# Source0-md5:	67293549b90f549ca9210743eaa5b09c
 %endif
 %if %{need_x8664}
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source1-md5:	0da016f8d5138c1ee51b7fa375821574
+# Source1-md5:	cbefbe43bca916f536872a994da8dcec
 %endif
-Patch0:		%{name}-gcc34.patch
-Patch1:		%{name}-GL.patch
-Patch2:		%{name}-conftest.patch
+Patch0:		%{name}-GL.patch
+Patch1:		%{name}-conftest.patch
 # http://www.minion.de/files/1.0-6629/
-Patch3:		%{name}-2.6.16-build.patch
-# http://www.nvnews.net/vbulletin/showthread.php?t=62021
 URL:		http://www.nvidia.com/object/linux.html
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel-module-build >= 3:2.6.7}
@@ -188,9 +185,7 @@ rm -rf NVIDIA-Linux-x86*-%{_nv_ver}-%{_nv_rel}-pkg*
 %setup -qDT -n NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1
 %endif
 %patch0 -p1
-%patch1 -p1
-#%patch2 -p1
-%patch3	-p0
+#%patch1 -p1
 sed -i 's:-Wpointer-arith::' usr/src/nv/Makefile.kbuild
 
 %build
