@@ -8,7 +8,7 @@
 %bcond_with	verbose		# verbose build (V=1)
 #
 %define		_nv_ver		1.0
-%define		_nv_rel		8756
+%define		_nv_rel		8762
 %define		_min_x11	6.7.0
 %define		_rel		1
 #
@@ -37,11 +37,11 @@ Group:		X11
 # why not pkg0!?
 %if %{need_x86}
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	67293549b90f549ca9210743eaa5b09c
+# Source0-md5:	86bcf4a3a9d441dff9e25b82ec8a6060
 %endif
 %if %{need_x8664}
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source1-md5:	cbefbe43bca916f536872a994da8dcec
+# Source1-md5:	5eb0b27342fd726fbbdd1d99eadbd0e7
 %endif
 Patch0:		%{name}-GL.patch
 Patch1:		%{name}-conftest.patch
