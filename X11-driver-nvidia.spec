@@ -10,7 +10,7 @@
 %define		_nv_ver		1.0
 %define		_nv_rel		8762
 %define		_min_x11	6.7.0
-%define		_rel		2
+%define		_rel		3
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -43,6 +43,8 @@ Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVID
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
 # Source1-md5:	73a12a4933c57941a7a8b7c1186f8b93
 %endif
+Source2:	%{name}-settings.desktop
+Source3:	%{name}-xinitrc.sh
 Patch0:		%{name}-GL.patch
 Patch1:		%{name}-conftest.patch
 # http://www.minion.de/files/1.0-6629/
@@ -228,11 +230,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with userspace}
 install -d $RPM_BUILD_ROOT%{_libdir}/modules/{drivers,extensions} \
-	$RPM_BUILD_ROOT{/usr/include/GL,/usr/%{_lib}/tls,%{_bindir}}
+	$RPM_BUILD_ROOT{/usr/include/GL,/usr/%{_lib}/tls,%{_bindir}} \
+	$RPM_BUILD_ROOT{%{_pixmapsdir},%{_desktopdir},/etc/X11/xinit/xinitrc.d}
 
 ln -sf $RPM_BUILD_ROOT%{_libdir} $RPM_BUILD_ROOT%{_prefix}/../lib
 
 install usr/bin/nvidia-settings $RPM_BUILD_ROOT%{_bindir}
+install usr/share/doc/nvidia-settings.png $RPM_BUILD_ROOT%{_pixmapsdir}
+install %{SOURCE2} $RPM_BUILD_ROOT%{_desktopdir}/nvidia-settings.desktop
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/X11/xinit/xinitrc.d/nvidia-settings.sh
 install usr/lib/libnvidia-tls.so.%{version} $RPM_BUILD_ROOT/usr/%{_lib}
 install usr/lib/tls/libnvidia-tls.so.%{version} $RPM_BUILD_ROOT/usr/%{_lib}/tls
 install usr/lib/libGL{,core}.so.%{version} $RPM_BUILD_ROOT%{_libdir}
@@ -249,7 +255,6 @@ install usr/X11R6/lib/modules/drivers/nvidia_drv.o $RPM_BUILD_ROOT%{_libdir}/mod
 install usr/X11R6/lib/libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}
 install usr/X11R6/lib/libXvMCNVIDIA.a $RPM_BUILD_ROOT%{_libdir}
 install usr/include/GL/*.h	$RPM_BUILD_ROOT/usr/include/GL
-#install usr/bin/nvidia-settings $RPM_BUILD_ROOT%{_bindir}
 
 ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/libGL.so
 ln -sf libglx.so.%{version} $RPM_BUILD_ROOT%{_libdir}/modules/extensions/libglx.so
@@ -354,4 +359,7 @@ EOF
 %defattr(644,root,root,755)
 %doc usr/share/doc/nvidia-settings-user-guide.txt
 %attr(755,root,root) %{_bindir}/nvidia-settings
+%attr(755,root,root) /etc/X11/xinit/xinitrc.d/*.sh
+%{_desktopdir}/*
+%{_pixmapsdir}/*
 %endif
