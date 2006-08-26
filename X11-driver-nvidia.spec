@@ -8,9 +8,9 @@
 %bcond_with	verbose		# verbose build (V=1)
 #
 %define		_nv_ver		1.0
-%define		_nv_rel		8762
+%define		_nv_rel		8774
 %define		_min_x11	6.7.0
-%define		_rel		3
+%define		_rel		1
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -37,11 +37,11 @@ Group:		X11
 # why not pkg0!?
 %if %{need_x86}
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	86bcf4a3a9d441dff9e25b82ec8a6060
+# Source0-md5:	eb01a4372096ee7799e6560cf568c1c2
 %endif
 %if %{need_x8664}
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source1-md5:	73a12a4933c57941a7a8b7c1186f8b93
+# Source1-md5:	5f8d5f8e076d1bb49b460a7aa96f069f
 %endif
 Source2:	%{name}-settings.desktop
 Source3:	%{name}-xinitrc.sh
@@ -236,7 +236,7 @@ install -d $RPM_BUILD_ROOT%{_libdir}/modules/{drivers,extensions} \
 ln -sf $RPM_BUILD_ROOT%{_libdir} $RPM_BUILD_ROOT%{_prefix}/../lib
 
 install usr/bin/nvidia-settings $RPM_BUILD_ROOT%{_bindir}
-install usr/share/doc/nvidia-settings.png $RPM_BUILD_ROOT%{_pixmapsdir}
+install usr/share/pixmaps/nvidia-settings.png $RPM_BUILD_ROOT%{_pixmapsdir}
 install %{SOURCE2} $RPM_BUILD_ROOT%{_desktopdir}/nvidia-settings.desktop
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/X11/xinit/xinitrc.d/nvidia-settings.sh
 install usr/lib/libnvidia-tls.so.%{version} $RPM_BUILD_ROOT/usr/%{_lib}
