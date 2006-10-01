@@ -8,7 +8,7 @@
 %bcond_with	verbose		# verbose build (V=1)
 #
 %define		_nv_ver		1.0
-%define		_nv_rel		8774
+%define		_nv_rel		9625
 %define		_min_x11	6.7.0
 %define		_rel		1
 #
@@ -25,8 +25,11 @@
 %define		need_x8664	1
 %endif
 %endif
-#
 
+%if %{without kernel}
+%undefine with_dist_kernel
+%endif
+#
 Summary:	Linux Drivers for nVidia TNT/TNT2/GeForce/Quadro Chips
 Summary(pl):	Sterowniki do kart graficznych nVidia TNT/TNT2/GeForce/Quadro
 Name:		X11-driver-nvidia
@@ -37,11 +40,11 @@ Group:		X11
 # why not pkg0!?
 %if %{need_x86}
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	eb01a4372096ee7799e6560cf568c1c2
+# Source0-md5:	0e15c3234b9c61a2e81b0c0c697f22ef
 %endif
 %if %{need_x8664}
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source1-md5:	5f8d5f8e076d1bb49b460a7aa96f069f
+# Source1-md5:	df4ab1c8ce00d69c22ab5a51d5ba38b3
 %endif
 Source2:	%{name}-settings.desktop
 Source3:	%{name}-xinitrc.sh
@@ -251,7 +254,7 @@ install usr/X11R6/lib/modules/extensions/libglx.so.%{version} \
 #install usr/lib32/libGL{,core}.so.%{version} $RPM_BUILD_ROOT%{_libdir32}
 %endif
 
-install usr/X11R6/lib/modules/drivers/nvidia_drv.o $RPM_BUILD_ROOT%{_libdir}/modules/drivers
+install usr/X11R6/lib/modules/drivers/nvidia_drv.so $RPM_BUILD_ROOT%{_libdir}/modules/drivers
 install usr/X11R6/lib/libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}
 install usr/X11R6/lib/libXvMCNVIDIA.a $RPM_BUILD_ROOT%{_libdir}
 install usr/include/GL/*.h	$RPM_BUILD_ROOT/usr/include/GL
@@ -332,7 +335,7 @@ EOF
 %attr(755,root,root) /usr/%{_lib}/libGL.so.1
 %attr(755,root,root) /usr/%{_lib}/libGL.so
 %attr(755,root,root) %{_libdir}/modules/extensions/libglx.so*
-%attr(755,root,root) %{_libdir}/modules/drivers/nvidia_drv.o
+%attr(755,root,root) %{_libdir}/modules/drivers/nvidia_drv.so
 %endif
 
 %if %{with kernel}
