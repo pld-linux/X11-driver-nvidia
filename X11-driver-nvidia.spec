@@ -202,6 +202,7 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
 		exit 1
 	fi
+	rm -rf o
 	install -d o/include/linux
 	ln -sf %{_kernelsrcdir}/config-$cfg o/.config
 	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers
@@ -209,7 +210,6 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 %if %{with dist_kernel}
 	%{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
 %else
-	install -d o/include/config
 	touch o/include/config/MARKER
 	ln -sf %{_kernelsrcdir}/scripts o/scripts
 %endif
