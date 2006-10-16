@@ -8,7 +8,7 @@
 %bcond_with	verbose		# verbose build (V=1)
 #
 %define		_nv_ver		1.0
-%define		_nv_rel		9625
+%define		_nv_rel		9626
 %define		_min_x11	6.7.0
 %define		_rel		0.1
 #
@@ -30,8 +30,8 @@
 %undefine with_dist_kernel
 %endif
 #
-Summary:	Linux Drivers for nVidia TNT/TNT2/GeForce/Quadro Chips
-Summary(pl):	Sterowniki do kart graficznych nVidia TNT/TNT2/GeForce/Quadro
+Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
+Summary(pl):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		X11-driver-nvidia
 Version:	%{_nv_ver}.%{_nv_rel}
 Release:	%{_rel}
@@ -40,11 +40,11 @@ Group:		X11
 # why not pkg0!?
 %if %{need_x86}
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	0e15c3234b9c61a2e81b0c0c697f22ef
+# Source0-md5:	5a3af501f4e65bdaf7e22ce5b093cd74
 %endif
 %if %{need_x8664}
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source1-md5:	df4ab1c8ce00d69c22ab5a51d5ba38b3
+# Source1-md5:	1900a8c55b62fa2dc4799746f09391c4
 %endif
 Source2:	%{name}-settings.desktop
 Source3:	%{name}-xinitrc.sh
@@ -89,21 +89,26 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 This driver set adds improved 2D functionality to the Xorg/XFree86 X
 server as well as high performance OpenGL acceleration, AGP support,
 support for most flat panels, and 2D multiple monitor support.
+Supporten hardware: new NVIDIA GeForce (from GeForce2 MX) and Quadro 
+(Quadro4 and up) based graphics accelerators. 
 
-Hardware: nVidia TNT, TNT2, GeForce, or Quadro based graphics
-accelerator. The nVidia NV1 and RIVA 128/128ZX chips are supported in
-the base Xorg/XFree86 install and are not supported by this driver
-set.
+The older graphics chips are unsupported:
+- NV1 and RIVA 128/128ZX chips are supported in the base Xorg/XFree86 
+  install (nv driver)
+- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 are suported by -legacy
+  drivers.
 
 %description -l pl
 Usprawnione sterowniki dla kart graficznych nVidia do serwera
-Xorg/XFree86, daj±ce wysokowydajn± akceleracjê OpenGL, obs³ugê AGP i
-wielu monitorów 2D.
+Xorg/XFree86, daj±ce wysokowydajn± akceleracjê OpenGL, obs³ugê AGP 
+i wielu monitorów 2D.
+Obs³uguj± w miarê nowe karty NVIDIA GeForce (od wersji GeForce2 MX)
+oraz Quadro (od wersji Quadro4) do serwera Xorg/XFree86. 
 
-Obs³uguj± karty nVidia TNT/TNT2/GeForce/Quadro do serwera
-Xorg/XFree86; Karty nVidia NV1 i Riva 128/128ZX s± obs³ugiwane przez
-sterownik nv z pakietów Xorg/XFree8 - NIE s± obs³ugiwane przez ten
-pakiet.
+Starsze uk³ady graficzne NVIDIA nie s± obs³ugiwane przez ten pakiet:
+- NV1 i Riva 128/128ZX s± obs³ugiwane przez sterownik nv z Xorg.
+- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 obs³ugiwane s± przez 
+  sterownik NVIDIA w wersji -legacy. 
 
 %package devel
 Summary:	OpenGL for X11R6 development (only gl?.h)
