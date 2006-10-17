@@ -91,6 +91,10 @@ accelerator. The nVidia NV1 and RIVA 128/128ZX chips are supported in
 the base Xorg/XFree86 install and are not supported by this driver
 set.
 
+SECURITY: This version (8774) is supposed to be localy and remotely 
+exploitable - look at the security advisory 
+http://download2.rapid7.com/r7-0025/
+
 %description -l pl
 Usprawnione sterowniki dla kart graficznych nVidia do serwera
 Xorg/XFree86, daj±ce wysokowydajn± akceleracjê OpenGL, obs³ugê AGP i
@@ -100,6 +104,10 @@ Obs³uguj± karty nVidia TNT/TNT2/GeForce/Quadro do serwera
 Xorg/XFree86; Karty nVidia NV1 i Riva 128/128ZX s± obs³ugiwane przez
 sterownik nv z pakietów Xorg/XFree8 - NIE s± obs³ugiwane przez ten
 pakiet.
+
+BEZPIECZEÑSTWO: Ta wersja sterownika (8774) jest podatna na zdalne 
+jak i lokalne ataki pozwalaj±ce na wykoannie kodu z uprawnieniami 
+roota - szczegó³y na stronie http://download2.rapid7.com/r7-0025/ 
 
 %package devel
 Summary:	OpenGL for X11R6 development (only gl?.h)
