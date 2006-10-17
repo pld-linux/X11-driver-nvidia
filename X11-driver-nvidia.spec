@@ -10,7 +10,7 @@
 %define		_nv_ver		1.0
 %define		_nv_rel		8774
 %define		_min_x11	6.7.0
-%define		_rel		1
+%define		_rel		2
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -106,7 +106,7 @@ sterownik nv z pakietów Xorg/XFree8 - NIE s± obs³ugiwane przez ten
 pakiet.
 
 BEZPIECZEÑSTWO: Ta wersja sterownika (8774) jest podatna na zdalne 
-jak i lokalne ataki pozwalaj±ce na wykoannie kodu z uprawnieniami 
+jak i lokalne ataki pozwalaj±ce na wykonanie kodu z uprawnieniami 
 roota - szczegó³y na stronie http://download2.rapid7.com/r7-0025/ 
 
 %package devel
