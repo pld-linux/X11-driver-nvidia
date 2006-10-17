@@ -89,26 +89,28 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 This driver set adds improved 2D functionality to the Xorg/XFree86 X
 server as well as high performance OpenGL acceleration, AGP support,
 support for most flat panels, and 2D multiple monitor support.
-Supporten hardware: new NVIDIA GeForce (from GeForce2 MX) and Quadro 
-(Quadro4 and up) based graphics accelerators. 
+
+Supported hardware: new NVIDIA GeForce (from GeForce2 MX) and Quadro
+(Quadro4 and up) based graphics accelerators.
 
 The older graphics chips are unsupported:
-- NV1 and RIVA 128/128ZX chips are supported in the base Xorg/XFree86 
+- NV1 and RIVA 128/128ZX chips are supported in the base Xorg
   install (nv driver)
-- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 are suported by -legacy
-  drivers.
+- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 are suported by
+  X11-driver-nvidia-legacy drivers.
 
 %description -l pl
 Usprawnione sterowniki dla kart graficznych nVidia do serwera
 Xorg/XFree86, daj±ce wysokowydajn± akceleracjê OpenGL, obs³ugê AGP 
 i wielu monitorów 2D.
+
 Obs³uguj± w miarê nowe karty NVIDIA GeForce (od wersji GeForce2 MX)
-oraz Quadro (od wersji Quadro4) do serwera Xorg/XFree86. 
+oraz Quadro (od wersji Quadro4).
 
 Starsze uk³ady graficzne NVIDIA nie s± obs³ugiwane przez ten pakiet:
 - NV1 i Riva 128/128ZX s± obs³ugiwane przez sterownik nv z Xorg.
-- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 obs³ugiwane s± przez 
-  sterownik NVIDIA w wersji -legacy. 
+- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 obs³ugiwane s± przez
+  sterownik NVIDIA z pakietu X11-driver-nvidia-legacy.
 
 %package devel
 Summary:	OpenGL for X11R6 development (only gl?.h)
