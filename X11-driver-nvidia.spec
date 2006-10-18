@@ -94,6 +94,8 @@ set.
 SECURITY: This version (8774) is supposed to be localy and remotely 
 exploitable - look at the security advisory 
 http://download2.rapid7.com/r7-0025/
+SOLUTION: Upgrade to 1.0-9626 or disable accelerated rendering 
+("RenderAccel" option).
 
 %description -l pl
 Usprawnione sterowniki dla kart graficznych nVidia do serwera
@@ -108,6 +110,8 @@ pakiet.
 BEZPIECZEÑSTWO: Ta wersja sterownika (8774) jest podatna na zdalne 
 jak i lokalne ataki pozwalaj±ce na wykonanie kodu z uprawnieniami 
 roota - szczegó³y na stronie http://download2.rapid7.com/r7-0025/ 
+ROZWI¡ZANIE: Aktualizacja do 1.0-9626 lub deaktywacja akcelerowanego
+wy¶wietlania (opcja "RenderAccel").
 
 %package devel
 Summary:	OpenGL for X11R6 development (only gl?.h)
@@ -297,6 +301,19 @@ cat << EOF
  *  You must install:                                  *
  *  kernel(24)(-smp)-video-nvidia-%{version}             *
  *  for this driver to work                            *
+ *                                                     *
+ *******************************************************
+
+ *******************************************************
+ *                                                     *
+ * SECURITY:                                           *
+ * This version (1.0-8774) is supposed to be localy    *
+ * and remotely exploitable - look at the security     *
+ * advisory http://download2.rapid7.com/r7-0025/       *
+ *                                                     *
+ * SOLUTION:                                           *
+ * Move to nv driver, upgrade to 1.0-9626 or disable   *
+ * accelerated rendering ("RenderAccel" option).       *
  *                                                     *
  *******************************************************
 
