@@ -1,4 +1,6 @@
 #
+# TODO: 	- check security stuff and remove warning banners
+#
 # Conditional build:
 %bcond_without	dist_kernel	# without distribution kernel
 %bcond_without	smp		# without smp packages
@@ -8,9 +10,9 @@
 %bcond_with	verbose		# verbose build (V=1)
 #
 %define		_nv_ver		1.0
-%define		_nv_rel		8774
+%define		_nv_rel		8776
 %define		_min_x11	6.7.0
-%define		_rel		2
+%define		_rel		0.1
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -37,11 +39,11 @@ Group:		X11
 # why not pkg0!?
 %if %{need_x86}
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	eb01a4372096ee7799e6560cf568c1c2
+# Source0-md5:	56676850e400a10a123c7f65f63e3aea
 %endif
 %if %{need_x8664}
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source1-md5:	5f8d5f8e076d1bb49b460a7aa96f069f
+# Source1-md5:	4732b78f2367f6af197ac06492e9e330
 %endif
 Source2:	%{name}-settings.desktop
 Source3:	%{name}-xinitrc.sh
