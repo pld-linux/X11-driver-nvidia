@@ -1,6 +1,4 @@
 #
-# TODO: 	- check security stuff and remove warning banners
-#
 # Conditional build:
 %bcond_without	dist_kernel	# without distribution kernel
 %bcond_without	smp		# without smp packages
@@ -12,7 +10,7 @@
 %define		_nv_ver		1.0
 %define		_nv_rel		8776
 %define		_min_x11	6.7.0
-%define		_rel		0.1
+%define		_rel		1
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -29,8 +27,8 @@
 %endif
 #
 
-Summary:	Linux Drivers for nVidia TNT/TNT2/GeForce/Quadro Chips
-Summary(pl):	Sterowniki do kart graficznych nVidia TNT/TNT2/GeForce/Quadro
+Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
+Summary(pl):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		X11-driver-nvidia
 Version:	%{_nv_ver}.%{_nv_rel}
 Release:	%{_rel}
@@ -84,36 +82,29 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %endif
 
 %description
-This driver set adds improved 2D functionality to the Xorg/XFree86 X
-server as well as high performance OpenGL acceleration, AGP support,
-support for most flat panels, and 2D multiple monitor support.
+This driver set adds improved 2D functionality to the Xorg X server 
+as well as high performance OpenGL acceleration, AGP support, support 
+for most flat panels, and 2D multiple monitor support.
+Supported hardware: modern NVIDIA GeForce (from GeForce2 MX) and Quadro
+(Quadro4 and up) based graphics accelerators. 
 
-Hardware: nVidia TNT, TNT2, GeForce, or Quadro based graphics
-accelerator. The nVidia NV1 and RIVA 128/128ZX chips are supported in
-the base Xorg/XFree86 install and are not supported by this driver
-set.
-
-SECURITY: This version (8774) is supposed to be localy and remotely 
-exploitable - look at the security advisory 
-http://download2.rapid7.com/r7-0025/
-SOLUTION: Upgrade to 1.0-9626 or disable accelerated rendering 
-("RenderAccel" option).
+The older graphics chips are unsupported:
+- NV1 and RIVA 128/128ZX chips are supported in the base Xorg install 
+  (nv driver)
+- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 are suported by -legacy
+  drivers.
 
 %description -l pl
-Usprawnione sterowniki dla kart graficznych nVidia do serwera
-Xorg/XFree86, daj±ce wysokowydajn± akceleracjê OpenGL, obs³ugê AGP i
-wielu monitorów 2D.
+Usprawnione sterowniki dla kart graficznych NVIDIA do serwera
+Xorg, daj±ce wysokowydajn± akceleracjê OpenGL, obs³ugê AGP 
+i wielu monitorów 2D.
+Obs³uguj± w miarê nowe karty NVIDIA GeForce (od wersji GeForce2 MX)
+oraz Quadro (od wersji Quadro4) do serwera Xorg/XFree86. 
 
-Obs³uguj± karty nVidia TNT/TNT2/GeForce/Quadro do serwera
-Xorg/XFree86; Karty nVidia NV1 i Riva 128/128ZX s± obs³ugiwane przez
-sterownik nv z pakietów Xorg/XFree8 - NIE s± obs³ugiwane przez ten
-pakiet.
-
-BEZPIECZEÑSTWO: Ta wersja sterownika (8774) jest podatna na zdalne 
-jak i lokalne ataki pozwalaj±ce na wykonanie kodu z uprawnieniami 
-roota - szczegó³y na stronie http://download2.rapid7.com/r7-0025/ 
-ROZWI¡ZANIE: Aktualizacja do 1.0-9626 lub deaktywacja akcelerowanego
-wy¶wietlania (opcja "RenderAccel").
+Starsze uk³ady graficzne NVIDIA nie s± obs³ugiwane przez ten pakiet:
+- NV1 i Riva 128/128ZX s± obs³ugiwane przez sterownik nv z Xorg.
+- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 obs³ugiwane s± przez 
+  sterownik NVIDIA w wersji -legacy. 
 
 %package devel
 Summary:	OpenGL for X11R6 development (only gl?.h)
@@ -303,19 +294,6 @@ cat << EOF
  *  You must install:                                  *
  *  kernel(24)(-smp)-video-nvidia-%{version}             *
  *  for this driver to work                            *
- *                                                     *
- *******************************************************
-
- *******************************************************
- *                                                     *
- * SECURITY:                                           *
- * This version (1.0-8774) is supposed to be localy    *
- * and remotely exploitable - look at the security     *
- * advisory http://download2.rapid7.com/r7-0025/       *
- *                                                     *
- * SOLUTION:                                           *
- * Move to nv driver, upgrade to 1.0-9626 or disable   *
- * accelerated rendering ("RenderAccel" option).       *
  *                                                     *
  *******************************************************
 
