@@ -373,7 +373,7 @@ EOF
 %attr(755,root,root) %{_bindir}/nvidia-settings
 %attr(755,root,root) %{_bindir}/nvidia-xconfig
 %attr(755,root,root) /etc/X11/xinit/xinitrc.d/*.sh
-%{_desktopdir}/*
+%{_desktopdir}/*.desktop
 %{_mandir}/man1/*
 %{_pixmapsdir}/*
 %endif
