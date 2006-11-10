@@ -8,9 +8,9 @@
 %bcond_with	verbose		# verbose build (V=1)
 #
 %define		_nv_ver		1.0
-%define		_nv_rel		9626
+%define		_nv_rel		9629
 %define		_min_x11	6.7.0
-%define		_rel		0.1
+%define		_rel		1
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -40,11 +40,11 @@ Group:		X11
 # why not pkg0!?
 %if %{need_x86}
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	5a3af501f4e65bdaf7e22ce5b093cd74
+# Source0-md5:	a9e6097e84a0d6310e5a71c58249ccae
 %endif
 %if %{need_x8664}
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source1-md5:	1900a8c55b62fa2dc4799746f09391c4
+# Source1-md5:	7ff9c0cb34f0e43817703a765d21f813
 %endif
 Source2:	%{name}-settings.desktop
 Source3:	%{name}-xinitrc.sh
