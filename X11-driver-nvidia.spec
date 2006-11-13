@@ -205,6 +205,12 @@ sed -i 's:-Wpointer-arith::' usr/src/nv/Makefile.kbuild
 %if %{with kernel}
 cd usr/src/nv/
 ln -sf Makefile.kbuild Makefile
+cat >> Makefile <<'EOF'
+
+$(obj)/nv-kernel.o: $(src)/nv-kernel.o.bin
+	cp $< $@
+EOF
+mv nv-kernel.o{,.bin}
 %build_kernel_modules -m nvidia
 %endif
 
