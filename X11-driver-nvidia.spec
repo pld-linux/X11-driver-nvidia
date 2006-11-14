@@ -57,7 +57,7 @@ URL:		http://www.nvidia.com/object/linux.html
 %endif
 BuildRequires:	%{kgcc_package}
 #BuildRequires:	X11-devel >= %{_min_x11}	# disabled for now
-BuildRequires:	rpmbuild(macros) >= 1.326
+BuildRequires:	rpmbuild(macros) >= 1.330
 BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
 Requires:	X11-Xserver
