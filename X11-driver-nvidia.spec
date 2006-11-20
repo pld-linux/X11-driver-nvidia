@@ -8,7 +8,7 @@
 %bcond_with	verbose		# verbose build (V=1)
 #
 %define		_nv_ver		1.0
-%define		_nv_rel		8776
+%define		_nv_rel		9629
 %define		_min_x11	6.7.0
 %define		_rel		1
 #
@@ -37,11 +37,11 @@ Group:		X11
 # why not pkg0!?
 %if %{need_x86}
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	56676850e400a10a123c7f65f63e3aea
+# Source0-md5:	a9e6097e84a0d6310e5a71c58249ccae
 %endif
 %if %{need_x8664}
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source1-md5:	4732b78f2367f6af197ac06492e9e330
+# Source1-md5:	7ff9c0cb34f0e43817703a765d21f813
 %endif
 Source2:	%{name}-settings.desktop
 Source3:	%{name}-xinitrc.sh
@@ -256,7 +256,7 @@ install usr/X11R6/lib/modules/extensions/libglx.so.%{version} \
 #install usr/lib32/libGL{,core}.so.%{version} $RPM_BUILD_ROOT%{_libdir32}
 %endif
 
-install usr/X11R6/lib/modules/drivers/nvidia_drv.o $RPM_BUILD_ROOT%{_libdir}/modules/drivers
+install usr/X11R6/lib/modules/drivers/nvidia_drv.so $RPM_BUILD_ROOT%{_libdir}/modules/drivers
 install usr/X11R6/lib/libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}
 install usr/X11R6/lib/libXvMCNVIDIA.a $RPM_BUILD_ROOT%{_libdir}
 install usr/include/GL/*.h	$RPM_BUILD_ROOT/usr/include/GL
@@ -337,7 +337,7 @@ EOF
 %attr(755,root,root) /usr/%{_lib}/libGL.so.1
 %attr(755,root,root) /usr/%{_lib}/libGL.so
 %attr(755,root,root) %{_libdir}/modules/extensions/libglx.so*
-%attr(755,root,root) %{_libdir}/modules/drivers/nvidia_drv.o
+%attr(755,root,root) %{_libdir}/modules/drivers/nvidia_drv.so
 %endif
 
 %if %{with kernel}
