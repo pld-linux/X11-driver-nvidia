@@ -6,11 +6,16 @@
 %bcond_without	incall		# include all tarballs
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	verbose		# verbose build (V=1)
+%bcond_with	grsec_kernel	# build for kernel-grsecurity
+#
+%if %{with kernel} && %{with dist_kernel} && %{with grsec_kernel}
+%define	alt_kernel	grsecurity
+%endif
 #
 %define		_nv_ver		1.0
-%define		_nv_rel		8762
+%define		_nv_rel		9631
 %define		_min_x11	6.7.0
-%define		_rel		2
+%define		_rel		1
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -27,8 +32,8 @@
 %endif
 #
 
-Summary:	Linux Drivers for nVidia TNT/TNT2/GeForce/Quadro Chips
-Summary(pl):	Sterowniki do kart graficznych nVidia TNT/TNT2/GeForce/Quadro
+Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
+Summary(pl):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		X11-driver-nvidia
 Version:	%{_nv_ver}.%{_nv_rel}
 Release:	%{_rel}
@@ -37,12 +42,14 @@ Group:		X11
 # why not pkg0!?
 %if %{need_x86}
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	86bcf4a3a9d441dff9e25b82ec8a6060
+# Source0-md5:	3676f622897d22f1815365b44139899e
 %endif
 %if %{need_x8664}
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source1-md5:	73a12a4933c57941a7a8b7c1186f8b93
+# Source1-md5:	636771d200455b8f3e3f4a26446d73f2
 %endif
+Source2:	%{name}-settings.desktop
+Source3:	%{name}-xinitrc.sh
 Patch0:		%{name}-GL.patch
 Patch1:		%{name}-conftest.patch
 # http://www.minion.de/files/1.0-6629/
@@ -80,24 +87,29 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %endif
 
 %description
-This driver set adds improved 2D functionality to the Xorg/XFree86 X
-server as well as high performance OpenGL acceleration, AGP support,
-support for most flat panels, and 2D multiple monitor support.
+This driver set adds improved 2D functionality to the Xorg X server 
+as well as high performance OpenGL acceleration, AGP support, support 
+for most flat panels, and 2D multiple monitor support.
+Supported hardware: modern NVIDIA GeForce (from GeForce2 MX) and Quadro
+(Quadro4 and up) based graphics accelerators. 
 
-Hardware: nVidia TNT, TNT2, GeForce, or Quadro based graphics
-accelerator. The nVidia NV1 and RIVA 128/128ZX chips are supported in
-the base Xorg/XFree86 install and are not supported by this driver
-set.
+The older graphics chips are unsupported:
+- NV1 and RIVA 128/128ZX chips are supported in the base Xorg install 
+  (nv driver)
+- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 are suported by -legacy
+  drivers.
 
 %description -l pl
-Usprawnione sterowniki dla kart graficznych nVidia do serwera
-Xorg/XFree86, daj±ce wysokowydajn± akceleracjê OpenGL, obs³ugê AGP i
-wielu monitorów 2D.
+Usprawnione sterowniki dla kart graficznych NVIDIA do serwera
+Xorg, daj±ce wysokowydajn± akceleracjê OpenGL, obs³ugê AGP 
+i wielu monitorów 2D.
+Obs³uguj± w miarê nowe karty NVIDIA GeForce (od wersji GeForce2 MX)
+oraz Quadro (od wersji Quadro4) do serwera Xorg/XFree86. 
 
-Obs³uguj± karty nVidia TNT/TNT2/GeForce/Quadro do serwera
-Xorg/XFree86; Karty nVidia NV1 i Riva 128/128ZX s± obs³ugiwane przez
-sterownik nv z pakietów Xorg/XFree8 - NIE s± obs³ugiwane przez ten
-pakiet.
+Starsze uk³ady graficzne NVIDIA nie s± obs³ugiwane przez ten pakiet:
+- NV1 i Riva 128/128ZX s± obs³ugiwane przez sterownik nv z Xorg.
+- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 obs³ugiwane s± przez 
+  sterownik NVIDIA w wersji -legacy. 
 
 %package devel
 Summary:	OpenGL for X11R6 development (only gl?.h)
@@ -196,14 +208,14 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
 		exit 1
 	fi
+	rm -rf o
 	install -d o/include/linux
 	ln -sf %{_kernelsrcdir}/config-$cfg o/.config
 	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers
 	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h
 %if %{with dist_kernel}
-	%{__make} -C %{_kernelsrcdir} O=$PWD/o prepare scripts
+	%{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
 %else
-	install -d o/include/config
 	touch o/include/config/MARKER
 	ln -sf %{_kernelsrcdir}/scripts o/scripts
 %endif
@@ -228,11 +240,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with userspace}
 install -d $RPM_BUILD_ROOT%{_libdir}/modules/{drivers,extensions} \
-	$RPM_BUILD_ROOT{/usr/include/GL,/usr/%{_lib}/tls,%{_bindir}}
+	$RPM_BUILD_ROOT{/usr/include/GL,/usr/%{_lib}/tls,%{_bindir}} \
+	$RPM_BUILD_ROOT{%{_pixmapsdir},%{_desktopdir},/etc/X11/xinit/xinitrc.d}
 
 ln -sf $RPM_BUILD_ROOT%{_libdir} $RPM_BUILD_ROOT%{_prefix}/../lib
 
 install usr/bin/nvidia-settings $RPM_BUILD_ROOT%{_bindir}
+install usr/share/pixmaps/nvidia-settings.png $RPM_BUILD_ROOT%{_pixmapsdir}
+install %{SOURCE2} $RPM_BUILD_ROOT%{_desktopdir}/nvidia-settings.desktop
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/X11/xinit/xinitrc.d/nvidia-settings.sh
 install usr/lib/libnvidia-tls.so.%{version} $RPM_BUILD_ROOT/usr/%{_lib}
 install usr/lib/tls/libnvidia-tls.so.%{version} $RPM_BUILD_ROOT/usr/%{_lib}/tls
 install usr/lib/libGL{,core}.so.%{version} $RPM_BUILD_ROOT%{_libdir}
@@ -245,11 +261,10 @@ install usr/X11R6/lib/modules/extensions/libglx.so.%{version} \
 #install usr/lib32/libGL{,core}.so.%{version} $RPM_BUILD_ROOT%{_libdir32}
 %endif
 
-install usr/X11R6/lib/modules/drivers/nvidia_drv.o $RPM_BUILD_ROOT%{_libdir}/modules/drivers
+install usr/X11R6/lib/modules/drivers/nvidia_drv.so $RPM_BUILD_ROOT%{_libdir}/modules/drivers
 install usr/X11R6/lib/libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}
 install usr/X11R6/lib/libXvMCNVIDIA.a $RPM_BUILD_ROOT%{_libdir}
 install usr/include/GL/*.h	$RPM_BUILD_ROOT/usr/include/GL
-#install usr/bin/nvidia-settings $RPM_BUILD_ROOT%{_bindir}
 
 ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/libGL.so
 ln -sf libglx.so.%{version} $RPM_BUILD_ROOT%{_libdir}/modules/extensions/libglx.so
@@ -327,7 +342,7 @@ EOF
 %attr(755,root,root) /usr/%{_lib}/libGL.so.1
 %attr(755,root,root) /usr/%{_lib}/libGL.so
 %attr(755,root,root) %{_libdir}/modules/extensions/libglx.so*
-%attr(755,root,root) %{_libdir}/modules/drivers/nvidia_drv.o
+%attr(755,root,root) %{_libdir}/modules/drivers/nvidia_drv.so
 %endif
 
 %if %{with kernel}
@@ -354,4 +369,7 @@ EOF
 %defattr(644,root,root,755)
 %doc usr/share/doc/nvidia-settings-user-guide.txt
 %attr(755,root,root) %{_bindir}/nvidia-settings
+%attr(755,root,root) /etc/X11/xinit/xinitrc.d/*.sh
+%{_desktopdir}/*
+%{_pixmapsdir}/*
 %endif
