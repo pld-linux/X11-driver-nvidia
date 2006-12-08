@@ -6,9 +6,14 @@
 %bcond_without	incall		# include all tarballs
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	verbose		# verbose build (V=1)
+%bcond_with	grsec_kernel	# build for kernel-grsecurity
+#
+%if %{with kernel} && %{with dist_kernel} && %{with grsec_kernel}
+%define	alt_kernel	grsecurity
+%endif
 #
 %define		_nv_ver		1.0
-%define		_nv_rel		9629
+%define		_nv_rel		9631
 %define		_min_x11	6.7.0
 %define		_rel		1
 #
@@ -37,11 +42,11 @@ Group:		X11
 # why not pkg0!?
 %if %{need_x86}
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	a9e6097e84a0d6310e5a71c58249ccae
+# Source0-md5:	3676f622897d22f1815365b44139899e
 %endif
 %if %{need_x8664}
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source1-md5:	7ff9c0cb34f0e43817703a765d21f813
+# Source1-md5:	636771d200455b8f3e3f4a26446d73f2
 %endif
 Source2:	%{name}-settings.desktop
 Source3:	%{name}-xinitrc.sh
