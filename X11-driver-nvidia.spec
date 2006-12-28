@@ -8,6 +8,11 @@
 %bcond_without	incall		# include all tarballs
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	verbose		# verbose build (V=1)
+%bcond_with	grsec_kernel	# build for kernel-grsecurity
+#
+%if %{with kernel} && %{with dist_kernel} && %{with grsec_kernel}
+%define	alt_kernel	grsecurity
+%endif
 #
 %define		_nv_ver		1.0
 %define		_nv_rel		9746
@@ -28,10 +33,6 @@
 %endif
 %endif
 
-%if !%{with kernel}
-%undefine with_dist_kernel
-%endif
-#
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		X11-driver-nvidia
