@@ -341,6 +341,7 @@ EOF
 
 %files progs
 %defattr(644,root,root,755)
+%doc usr/share/doc/nvidia-settings-user-guide.txt
 %attr(755,root,root) %{_bindir}/nvidia-settings
 %attr(755,root,root) %{_bindir}/nvidia-xconfig
 %attr(755,root,root) /etc/X11/xinit/xinitrc.d/*.sh
