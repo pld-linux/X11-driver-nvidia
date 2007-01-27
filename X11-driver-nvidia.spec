@@ -15,7 +15,7 @@
 %define		_nv_ver		1.0
 %define		_nv_rel		9746
 %define		_min_x11	6.7.0
-%define		_rel		1
+%define		_rel		2
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -253,6 +253,8 @@ install usr/lib/tls/libnvidia-tls.so.%{version} $RPM_BUILD_ROOT/usr/%{_lib}/tls
 install usr/lib/libGL{,core}.so.%{version} $RPM_BUILD_ROOT%{_libdir}
 install usr/X11R6/lib/modules/extensions/libglx.so.%{version} \
 	$RPM_BUILD_ROOT%{_libdir}/modules/extensions
+install usr/X11R6/lib/modules/libnvidia-wfb.so.%{version} \
+	$RPM_BUILD_ROOT%{_libdir}/modules
 %ifarch %{x8664}
 # support for running 32-bit OpenGL applications on 64-bit AMD64 Linux installations
 #install -d $RPM_BUILD_ROOT%{_libdir32}
@@ -267,6 +269,7 @@ install usr/include/GL/*.h	$RPM_BUILD_ROOT/usr/include/GL
 
 ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/libGL.so
 ln -sf libglx.so.%{version} $RPM_BUILD_ROOT%{_libdir}/modules/extensions/libglx.so
+ln -sf libnvidia-wfb.so.%{version} $RPM_BUILD_ROOT%{_libdir}/modules/libwfb.so
 ln -sf libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}/libXvMCNVIDIA.so
 
 # OpenGL ABI for Linux compatibility
@@ -340,6 +343,7 @@ EOF
 %endif
 %attr(755,root,root) /usr/%{_lib}/libGL.so.1
 %attr(755,root,root) /usr/%{_lib}/libGL.so
+%attr(755,root,root) %{_libdir}/modules/lib*
 %attr(755,root,root) %{_libdir}/modules/extensions/libglx.so*
 %attr(755,root,root) %{_libdir}/modules/drivers/nvidia_drv.so
 %endif
