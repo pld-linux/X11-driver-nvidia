@@ -34,7 +34,7 @@
 %endif
 
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
-Summary(pl.UTF-8):   Sterowniki do kart graficznych NVIDIA GeForce/Quadro
+Summary(pl.UTF-8):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		X11-driver-nvidia
 Version:	%{_nv_ver}.%{_nv_rel}
 Release:	%{_rel}
@@ -114,7 +114,7 @@ Starsze układy graficzne NVIDIA nie są obsługiwane przez ten pakiet:
 
 %package devel
 Summary:	OpenGL for X11R6 development (only gl?.h)
-Summary(pl.UTF-8):   Pliki nagłówkowe OpenGL dla systemu X11R6 (tylko gl?.h)
+Summary(pl.UTF-8):	Pliki nagłówkowe OpenGL dla systemu X11R6 (tylko gl?.h)
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Provides:	OpenGL-devel-base
@@ -131,7 +131,7 @@ sterowników nvidii.
 
 %package progs
 Summary:	Tools for advanced control of nVidia graphic cards
-Summary(pl.UTF-8):   Narzędzia do zarządzania kartami graficznymi nVidia
+Summary(pl.UTF-8):	Narzędzia do zarządzania kartami graficznymi nVidia
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	XFree86-driver-nvidia-progs
@@ -144,8 +144,8 @@ Narzędzia do zarządzania kartami graficznymi nVidia.
 
 %package -n kernel%{_alt_kernel}-video-nvidia
 Summary:	nVidia kernel module for nVidia Architecture support
-Summary(de.UTF-8):   Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
-Summary(pl.UTF-8):   Moduł jądra dla obsługi kart graficznych nVidia
+Summary(de.UTF-8):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
+Summary(pl.UTF-8):	Moduł jądra dla obsługi kart graficznych nVidia
 Version:	%{_nv_ver}.%{_nv_rel}
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
@@ -167,8 +167,8 @@ sterownik nVidii dla Xorg/XFree86.
 
 %package -n kernel%{_alt_kernel}-smp-video-nvidia
 Summary:	nVidia kernel module for nVidia Architecture support
-Summary(de.UTF-8):   Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
-Summary(pl.UTF-8):   Moduł jądra dla obsługi kart graficznych nVidia
+Summary(de.UTF-8):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
+Summary(pl.UTF-8):	Moduł jądra dla obsługi kart graficznych nVidia
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
