@@ -1,6 +1,9 @@
+# TODO
+# - missing CC quotes somewhere: ccache: invalid option -- S
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without distribution kernel
+%bcond_without	up		# without up packages
 %bcond_without	smp		# without smp packages
 %bcond_without	kernel		# without kernel packages
 %bcond_without	incall		# include all tarballs
@@ -15,7 +18,7 @@
 %define		_nv_ver		1.0
 %define		_nv_rel		9746
 %define		_min_x11	6.7.0
-%define		_rel		2
+%define		_rel		3
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -59,7 +62,7 @@ URL:		http://www.nvidia.com/object/linux.html
 %endif
 BuildRequires:	%{kgcc_package}
 #BuildRequires:	X11-devel >= %{_min_x11}	# disabled for now
-BuildRequires:	rpmbuild(macros) >= 1.308
+BuildRequires:	rpmbuild(macros) >= 1.330
 BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
 Requires:	X11-Xserver
@@ -203,35 +206,13 @@ sed -i 's:-Wpointer-arith::' usr/src/nv/Makefile.kbuild
 %if %{with kernel}
 cd usr/src/nv/
 ln -sf Makefile.kbuild Makefile
-for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}; do
-	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
-		exit 1
-	fi
-	rm -rf o
-	install -d o/include/linux
-	ln -sf %{_kernelsrcdir}/config-$cfg o/.config
-	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers
-	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h
-%if %{with dist_kernel}
-	%{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
-%else
-	touch o/include/config/MARKER
-	ln -sf %{_kernelsrcdir}/scripts o/scripts
-%endif
-	%{__make} -C %{_kernelsrcdir} clean \
-		RCS_FIND_IGNORE="-name '*.ko' -o -name nv-kernel.o -o" \
-		SYSSRC=%{_kernelsrcdir} \
-		SYSOUT=$PWD/o \
-		M=$PWD O=$PWD/o \
-		%{?with_verbose:V=1}
-	%{__make} -C %{_kernelsrcdir} modules \
-		CC="%{__cc}" CPP="%{__cpp}" \
-		SYSSRC=%{_kernelsrcdir} \
-		SYSOUT=$PWD/o \
-		M=$PWD O=$PWD/o \
-		%{?with_verbose:V=1}
-	mv nvidia.ko nvidia-$cfg.ko
-done
+cat >> Makefile <<'EOF'
+
+$(obj)/nv-kernel.o: $(src)/nv-kernel.o.bin
+	cp $< $@
+EOF
+mv nv-kernel.o{,.bin}
+%build_kernel_modules -m nvidia
 %endif
 
 %install
@@ -239,13 +220,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with userspace}
 install -d $RPM_BUILD_ROOT%{_libdir}/modules/{drivers,extensions} \
-	$RPM_BUILD_ROOT{/usr/include/GL,/usr/%{_lib}/tls,%{_bindir}} \
+	$RPM_BUILD_ROOT{/usr/include/GL,/usr/%{_lib}/tls,%{_bindir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT{%{_pixmapsdir},%{_desktopdir},/etc/X11/xinit/xinitrc.d}
 
 ln -sf $RPM_BUILD_ROOT%{_libdir} $RPM_BUILD_ROOT%{_prefix}/../lib
 
 install usr/bin/nvidia-settings $RPM_BUILD_ROOT%{_bindir}
+install usr/bin/nvidia-xconfig $RPM_BUILD_ROOT%{_bindir}
 install usr/share/pixmaps/nvidia-settings.png $RPM_BUILD_ROOT%{_pixmapsdir}
+install usr/share/man/man1/nvidia-[sx]* $RPM_BUILD_ROOT%{_mandir}/man1
 install %{SOURCE2} $RPM_BUILD_ROOT%{_desktopdir}/nvidia-settings.desktop
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/X11/xinit/xinitrc.d/nvidia-settings.sh
 install usr/lib/libnvidia-tls.so.%{version} $RPM_BUILD_ROOT/usr/%{_lib}
@@ -278,14 +261,7 @@ ln -sf %{_libdir}/libGL.so $RPM_BUILD_ROOT/usr/%{_lib}/libGL.so
 %endif
 
 %if %{with kernel}
-cd usr/src/nv/
-install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/misc
-install nvidia-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/nvidia.ko
-%if %{with smp} && %{with dist_kernel}
-install nvidia-smp.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc/nvidia.ko
-%endif
+%install_kernel_modules -m usr/src/nv/nvidia -d misc
 %endif
 
 %clean
@@ -372,7 +348,9 @@ EOF
 %defattr(644,root,root,755)
 %doc usr/share/doc/nvidia-settings-user-guide.txt
 %attr(755,root,root) %{_bindir}/nvidia-settings
+%attr(755,root,root) %{_bindir}/nvidia-xconfig
 %attr(755,root,root) /etc/X11/xinit/xinitrc.d/*.sh
-%{_desktopdir}/*
+%{_desktopdir}/*.desktop
+%{_mandir}/man1/*
 %{_pixmapsdir}/*
 %endif
