@@ -3,8 +3,6 @@
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without distribution kernel
-%bcond_without	up		# without up packages
-%bcond_without	smp		# without smp packages
 %bcond_without	kernel		# without kernel packages
 %bcond_without	incall		# include all tarballs
 %bcond_without	userspace	# don't build userspace programs
@@ -152,7 +150,7 @@ Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
-%{?with_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel}
 Provides:	X11-driver-nvidia(kernel)
 Obsoletes:	XFree86-nvidia-kernel
 
@@ -165,28 +163,6 @@ Die nVidia-Architektur-Unterstützung für den Linux-Kern.
 %description -n kernel%{_alt_kernel}-video-nvidia -l pl.UTF-8
 Obsługa architektury nVidia dla jądra Linuksa. Pakiet wymagany przez
 sterownik nVidii dla Xorg/XFree86.
-
-%package -n kernel%{_alt_kernel}-smp-video-nvidia
-Summary:	nVidia kernel module for nVidia Architecture support
-Summary(de.UTF-8):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
-Summary(pl.UTF-8):	Moduł jądra dla obsługi kart graficznych nVidia
-Release:	%{_rel}@%{_kernel_ver_str}
-Group:		Base/Kernel
-Requires(post,postun):	/sbin/depmod
-Requires:	dev >= 2.7.7-10
-%{?with_dist_kernel:%requires_releq_kernel_smp}
-Provides:	X11-driver-nvidia(kernel)
-Obsoletes:	XFree86-nvidia-kernel
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia
-nVidia Architecture support for Linux kernel SMP.
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia -l de.UTF-8
-Die nVidia-Architektur-Unterstützung für den Linux-Kern SMP.
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia -l pl.UTF-8
-Obsługa architektury nVidia dla jądra Linuksa SMP. Pakiet wymagany
-przez sterownik nVidii dla Xorg/XFree86.
 
 %prep
 cd %{_builddir}
@@ -275,7 +251,7 @@ cat << EOF
  *                                                     *
  *  NOTE:                                              *
  *  You must install:                                  *
- *  kernel(24)(-smp)-video-nvidia-%{version}             *
+ *  kernel-video-nvidia-%{version}                   *
  *  for this driver to work                            *
  *                                                     *
  *******************************************************
@@ -289,12 +265,6 @@ EOF
 
 %postun	-n kernel%{_alt_kernel}-video-nvidia
 %depmod %{_kernel_ver}
-
-%post	-n kernel%{_alt_kernel}-smp-video-nvidia
-%depmod %{_kernel_ver}smp
-
-%postun	-n kernel%{_alt_kernel}-smp-video-nvidia
-%depmod %{_kernel_ver}smp
 
 %if %{with userspace}
 %files
@@ -328,12 +298,6 @@ EOF
 %files -n kernel%{_alt_kernel}-video-nvidia
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/misc/*.ko*
-
-%if %{with smp} && %{with dist_kernel}
-%files -n kernel%{_alt_kernel}-smp-video-nvidia
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}smp/misc/*.ko*
-%endif
 %endif
 
 %if %{with userspace}
