@@ -18,7 +18,7 @@
 %define		_nv_ver		1.0
 %define		_nv_rel		9755
 %define		_min_x11	6.7.0
-%define		_rel		1
+%define		_rel		2
 #
 %define		need_x86	0
 %define		need_x8664	0
@@ -73,6 +73,7 @@ Provides:	X11-OpenGL-libGL
 Provides:	XFree86-OpenGL-core
 Provides:	XFree86-OpenGL-libGL
 Obsoletes:	Mesa
+Obsoletes:	Mesa-libGL
 Obsoletes:	X11-OpenGL-core
 Obsoletes:	X11-OpenGL-libGL
 Obsoletes:	XFree86-OpenGL-core
