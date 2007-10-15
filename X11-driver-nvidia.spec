@@ -17,7 +17,7 @@
 #
 %define		_nv_ver		100.14.09
 %define		_min_x11	6.7.0
-%define		_rel	drbd.spec
+%define		_rel	55
 #
 %define		need_x86	0
 %define		need_x8664	0
