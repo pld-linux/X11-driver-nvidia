@@ -15,7 +15,7 @@
 %define	alt_kernel	grsecurity
 %endif
 #
-%define		_nv_ver		100.14.09
+%define		_nv_ver		100.14.19
 %define		_min_x11	6.7.0
 %define		_rel	55
 #
@@ -41,26 +41,22 @@ Version:	%{_nv_ver}
 Release:	%{_rel}
 License:	nVidia Binary
 Group:		X11
-# why not pkg0!?
 %if %{need_x86}
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}/NVIDIA-Linux-x86-%{_nv_ver}-pkg1.run
-# Source0-md5:	7b021b460ce1b1c533d97a51f2dde133
+# Source0-md5:	d2f89f60cef8f9a0cc0ce228b46eeb8b
 %endif
 %if %{need_x8664}
 Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}/NVIDIA-Linux-x86_64-%{_nv_ver}-pkg1.run
-# Source1-md5:	60a6df9ff0bb02753908a83c324fd56d
+# Source1-md5:	3d702d7d67875b4b1e3095c2eb448b29
 %endif
 Source2:	%{name}-settings.desktop
 Source3:	%{name}-xinitrc.sh
 Patch0:		%{name}-GL.patch
-Patch1:		%{name}-conftest.patch
-# http://www.minion.de/files/1.0-6629/
-URL:		http://www.nvidia.com/object/linux.html
+URL:		http://www.nvidia.com/object/unix.html
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
 %endif
 BuildRequires:	%{kgcc_package}
-#BuildRequires:	X11-devel >= %{_min_x11}	# disabled for now
 BuildRequires:	rpmbuild(macros) >= 1.330
 BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
@@ -199,7 +195,6 @@ rm -rf NVIDIA-Linux-x86*-%{_nv_ver}-pkg*
 %setup -qDT -n NVIDIA-Linux-x86_64-%{_nv_ver}-pkg1
 %endif
 %patch0 -p1
-#%patch1 -p1
 sed -i 's:-Wpointer-arith::' usr/src/nv/Makefile.kbuild
 
 %build
@@ -238,12 +233,6 @@ install usr/X11R6/lib/modules/extensions/libglx.so.%{version} \
 	$RPM_BUILD_ROOT%{_libdir}/modules/extensions
 install usr/X11R6/lib/modules/libnvidia-wfb.so.%{version} \
 	$RPM_BUILD_ROOT%{_libdir}/modules
-%ifarch %{x8664}
-# support for running 32-bit OpenGL applications on 64-bit AMD64 Linux installations
-#install -d $RPM_BUILD_ROOT%{_libdir32}
-#install usr/lib32%{?with_tls:/tls}/libnvidia-tls.so.%{version} $RPM_BUILD_ROOT%{_libdir32}
-#install usr/lib32/libGL{,core}.so.%{version} $RPM_BUILD_ROOT%{_libdir32}
-%endif
 
 install usr/X11R6/lib/modules/drivers/nvidia_drv.so $RPM_BUILD_ROOT%{_libdir}/modules/drivers
 install usr/X11R6/lib/libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}
@@ -301,7 +290,6 @@ EOF
 %defattr(644,root,root,755)
 %doc LICENSE
 %doc usr/share/doc/{README.txt,NVIDIA_Changelog,XF86Config.sample}
-#%%lang(de) %doc usr/share/doc/README.DE
 %attr(755,root,root) %{_libdir}/libGL.so.*.*
 %attr(755,root,root) %{_libdir}/libGL.so
 %attr(755,root,root) %{_libdir}/libGLcore.so.*.*
@@ -309,14 +297,6 @@ EOF
 %dir /usr/%{_lib}/tls
 %attr(755,root,root) /usr/%{_lib}/libnvidia-tls.so.*.*.*
 %attr(755,root,root) /usr/%{_lib}/tls/libnvidia-tls.so.*.*.*
-%ifarch %{x8664}
-# support for running 32-bit OpenGL applications on 64-bit AMD64 Linux installations
-#dir %{_libdir32}
-#attr(755,root,root) %{_libdir32}/libGL.so.*.*
-#attr(755,root,root) %{_libdir32}/libGLcore.so.*.*
-#attr(755,root,root) %{_libdir32}/libXvMCNVIDIA.so.*.*
-#attr(755,root,root) %{_libdir32}/libnvidia-tls.so.*.*.*
-%endif
 %attr(755,root,root) /usr/%{_lib}/libGL.so.1
 %attr(755,root,root) /usr/%{_lib}/libGL.so
 %attr(755,root,root) %{_libdir}/modules/lib*
@@ -341,7 +321,6 @@ EOF
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libXvMCNVIDIA.so
 /usr/include/GL/*.h
-# -static
 %{_libdir}/libXvMCNVIDIA.a
 
 %files progs
