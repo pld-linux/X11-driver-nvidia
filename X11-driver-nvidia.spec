@@ -1,5 +1,3 @@
-# TODO
-# - missing CC quotes somewhere: ccache: invalid option -- S
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without distribution kernel
