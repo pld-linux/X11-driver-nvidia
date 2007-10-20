@@ -6,7 +6,6 @@
 %bcond_without	up		# without up packages
 %bcond_without	smp		# without smp packages
 %bcond_without	kernel		# without kernel packages
-%bcond_without	incall		# include all tarballs
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	verbose		# verbose build (V=1)
 %bcond_with	grsec_kernel	# build for kernel-grsecurity
@@ -19,20 +18,6 @@
 %define		_min_x11	6.7.0
 %define		_rel	55
 #
-%define		need_x86	0
-%define		need_x8664	0
-%if %{with incall}
-%define		need_x86	1
-%define		need_x8664	1
-%else
-%ifarch %{ix86}
-%define		need_x86	1
-%endif
-%ifarch %{x8664}
-%define		need_x8664	1
-%endif
-%endif
-#
 
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
@@ -41,14 +26,10 @@ Version:	%{_nv_ver}
 Release:	%{_rel}
 License:	nVidia Binary
 Group:		X11
-%if %{need_x86}
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}/NVIDIA-Linux-x86-%{_nv_ver}-pkg1.run
 # Source0-md5:	d2f89f60cef8f9a0cc0ce228b46eeb8b
-%endif
-%if %{need_x8664}
 Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}/NVIDIA-Linux-x86_64-%{_nv_ver}-pkg1.run
 # Source1-md5:	3d702d7d67875b4b1e3095c2eb448b29
-%endif
 Source2:	%{name}-settings.desktop
 Source3:	%{name}-xinitrc.sh
 Patch0:		%{name}-GL.patch
