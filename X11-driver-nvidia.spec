@@ -22,6 +22,7 @@
 %define		_min_x11	6.7.0
 %define		_rel	56
 
+%define		pname	X11-driver-nvidia
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		X11-driver-nvidia
@@ -33,9 +34,9 @@ Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}/NVIDIA-Linux
 # Source0-md5:	d2f89f60cef8f9a0cc0ce228b46eeb8b
 Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}/NVIDIA-Linux-x86_64-%{_nv_ver}-pkg1.run
 # Source1-md5:	3d702d7d67875b4b1e3095c2eb448b29
-Source2:	%{name}-settings.desktop
-Source3:	%{name}-xinitrc.sh
-Patch0:		%{name}-GL.patch
+Source2:	%{pname}-settings.desktop
+Source3:	%{pname}-xinitrc.sh
+Patch0:		%{pname}-GL.patch
 URL:		http://www.nvidia.com/object/unix.html
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
@@ -97,7 +98,7 @@ Starsze uk³ady graficzne NVIDIA nie s± obs³ugiwane przez ten pakiet:
 Summary:	OpenGL for X11R6 development (only gl?.h)
 Summary(pl):	Pliki nag³ówkowe OpenGL dla systemu X11R6 (tylko gl?.h)
 Group:		X11/Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{pname} = %{version}-%{release}
 Provides:	OpenGL-devel-base
 Obsoletes:	OpenGL-devel-base
 Obsoletes:	XFree86-driver-nvidia-devel
@@ -114,7 +115,7 @@ sterowników nvidii.
 Summary:	Tools for advanced control of nVidia graphic cards
 Summary(pl):	Narzêdzia do zarz±dzania kartami graficznymi nVidia
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{pname} = %{version}-%{release}
 Obsoletes:	XFree86-driver-nvidia-progs
 
 %description progs
