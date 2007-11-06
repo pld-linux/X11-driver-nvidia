@@ -20,7 +20,7 @@
 
 %define		_nv_ver		100.14.19
 %define		_min_x11	6.7.0
-%define		_rel	56
+%define		_rel	57
 
 %define		pname	X11-driver-nvidia
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
