@@ -25,7 +25,7 @@
 %define		pname	X11-driver-nvidia
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
-Name:		X11-driver-nvidia
+Name:		%{pname}%{_alt_kernel}
 Version:	%{_nv_ver}
 Release:	%{_rel}
 License:	nVidia Binary
