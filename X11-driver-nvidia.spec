@@ -290,7 +290,7 @@ EOF
 %endif
 
 %if %{with kernel}
-%if %{with up}
+%if %{with up} || (%{without up} && %{without smp})
 %files -n kernel%{_alt_kernel}-video-nvidia
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/misc/*.ko*
