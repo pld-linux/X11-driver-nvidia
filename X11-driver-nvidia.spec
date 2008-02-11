@@ -18,6 +18,14 @@
 %undefine	with_userspace
 %endif
 
+%if "%{alt_kernel}" == "desktop"
+%undefine	with_smp
+%undefine	with_up
+%define		smp_kernel	1
+%else
+%define		smp_kernel	0
+%endif
+
 %define		_nv_ver		100.14.19
 %define		_min_x11	6.7.0
 %define		_rel	60
@@ -133,7 +141,11 @@ Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
+%if %{smp_kernel}
+%{?with_dist_kernel:%requires_releq_kernel}
+%else
 %{?with_dist_kernel:%requires_releq_kernel_up}
+%endif
 Provides:	X11-driver-nvidia(kernel)
 Obsoletes:	XFree86-nvidia-kernel
 
