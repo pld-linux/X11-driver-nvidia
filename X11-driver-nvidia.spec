@@ -7,6 +7,7 @@
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	verbose		# verbose build (V=1)
 %bcond_with	grsec_kernel	# build for kernel-grsecurity
+%bcond_with	kabi	# new kernel deps, see kernel-vanilla.spec@HEAD
 
 %if %{without kernel}
 %undefine	with_dist_kernel
@@ -18,12 +19,18 @@
 %undefine	with_userspace
 %endif
 
-%if "%{alt_kernel}" == "desktop"
+%if "%{alt_kernel}" == "desktop" || "%{alt_kernel}" == "vanilla"
 %undefine	with_smp
 %undefine	with_up
 %define		smp_kernel	1
 %else
 %define		smp_kernel	0
+%endif
+
+%if %{with kabi}
+%define		modrel	%{_rel}
+%else
+%define		modrel	%{_rel}@%{_kernel_ver_str}
 %endif
 
 %define		_nv_ver		100.14.19
@@ -137,12 +144,13 @@ Summary:	nVidia kernel module for nVidia Architecture support
 Summary(de):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
 Summary(pl):	Modu³ j±dra dla obs³ugi kart graficznych nVidia
 Version:	%{_nv_ver}
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{modrel}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
 %if %{smp_kernel}
-%{?with_dist_kernel:%requires_releq_kernel}
+%{?with_dist_kernel:%{!?with_kabi:%requires_releq_kernel}}
+%{?with_dist_kernel:%{?with_kabi:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}}
 %else
 %{?with_dist_kernel:%requires_releq_kernel_up}
 %endif
@@ -163,7 +171,7 @@ sterownik nVidii dla Xorg/XFree86.
 Summary:	nVidia kernel module for nVidia Architecture support
 Summary(de):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
 Summary(pl):	Modu³ j±dra dla obs³ugi kart graficznych nVidia
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{modrel}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
@@ -214,8 +222,6 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libdir}/modules/{drivers,extensions} \
 	$RPM_BUILD_ROOT{/usr/include/GL,/usr/%{_lib}/tls,%{_bindir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT{%{_pixmapsdir},%{_desktopdir},/etc/X11/xinit/xinitrc.d}
-
-ln -sf $RPM_BUILD_ROOT%{_libdir} $RPM_BUILD_ROOT%{_prefix}/../lib
 
 install usr/bin/nvidia-settings $RPM_BUILD_ROOT%{_bindir}
 install usr/bin/nvidia-xconfig $RPM_BUILD_ROOT%{_bindir}
@@ -302,7 +308,7 @@ EOF
 %endif
 
 %if %{with kernel}
-%if %{with up} || %{without up} && %{without smp}
+%if %{with up} || %{smp_kernel}
 %files -n kernel%{_alt_kernel}-video-nvidia
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/misc/*.ko*
