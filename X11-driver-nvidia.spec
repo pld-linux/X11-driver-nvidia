@@ -6,14 +6,9 @@
 %bcond_without	kernel		# without kernel packages
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	verbose		# verbose build (V=1)
-%bcond_with	grsec_kernel	# build for kernel-grsecurity
-%bcond_with	kabi	# new kernel deps, see kernel-vanilla.spec@HEAD
 
 %if %{without kernel}
 %undefine	with_dist_kernel
-%endif
-%if %{with kernel} && %{with dist_kernel} && %{with grsec_kernel}
-%define	alt_kernel	grsecurity
 %endif
 %if "%{_alt_kernel}" != "%{nil}"
 %undefine	with_userspace
@@ -27,42 +22,32 @@
 %define		smp_kernel	0
 %endif
 
-%if %{with kabi}
-%define		modrel	%{_rel}
-%else
-%define		modrel	%{_rel}@%{_kernel_ver_str}
-%endif
-
-%define		_nv_ver		100.14.19
-%define		_min_x11	6.7.0
-%define		_rel	62
-
 %define		pname	X11-driver-nvidia
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		%{pname}%{_alt_kernel}
-Version:	%{_nv_ver}
-Release:	%{_rel}
+Version:	100.14.19
+Release:	62
 License:	nVidia Binary
 Group:		X11
-Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}/NVIDIA-Linux-x86-%{_nv_ver}-pkg1.run
+Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{version}/NVIDIA-Linux-x86-%{version}-pkg1.run
 # Source0-md5:	d2f89f60cef8f9a0cc0ce228b46eeb8b
-Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}/NVIDIA-Linux-x86_64-%{_nv_ver}-pkg1.run
+Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}-pkg1.run
 # Source1-md5:	3d702d7d67875b4b1e3095c2eb448b29
 Source2:	%{pname}-settings.desktop
 Source3:	%{pname}-xinitrc.sh
 Patch0:		%{pname}-GL.patch
 URL:		http://www.nvidia.com/object/unix.html
 %if %{with kernel}
-%{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
 BuildRequires:	%{kgcc_package}
+%{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
 BuildRequires:	rpmbuild(macros) >= 1.330
 %endif
 BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
 Requires:	X11-Xserver
-Requires:	X11-libs >= %{_min_x11}
-Requires:	X11-modules >= %{_min_x11}
+Requires:	X11-libs >= 6.7.0
+Requires:	X11-modules >= 6.7.0
 Provides:	X11-OpenGL-core
 Provides:	X11-OpenGL-libGL
 Provides:	XFree86-OpenGL-core
@@ -143,8 +128,6 @@ Narzêdzia do zarz±dzania kartami graficznymi nVidia.
 Summary:	nVidia kernel module for nVidia Architecture support
 Summary(de):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
 Summary(pl):	Modu³ j±dra dla obs³ugi kart graficznych nVidia
-Version:	%{_nv_ver}
-Release:	%{modrel}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
@@ -152,7 +135,7 @@ Requires:	dev >= 2.7.7-10
 %{?with_dist_kernel:%{!?with_kabi:%requires_releq_kernel}}
 %{?with_dist_kernel:%{?with_kabi:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}}
 %else
-%{?with_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}
 %endif
 Provides:	X11-driver-nvidia(kernel)
 Obsoletes:	XFree86-nvidia-kernel
@@ -171,11 +154,10 @@ sterownik nVidii dla Xorg/XFree86.
 Summary:	nVidia kernel module for nVidia Architecture support
 Summary(de):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
 Summary(pl):	Modu³ j±dra dla obs³ugi kart graficznych nVidia
-Release:	%{modrel}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
-%{?with_dist_kernel:%requires_releq_kernel_smp}
+%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}-smp(vermagic) = %{_kernel_ver}}
 Provides:	X11-driver-nvidia(kernel)
 Obsoletes:	XFree86-nvidia-kernel
 
@@ -191,13 +173,13 @@ przez sterownik nVidii dla Xorg/XFree86.
 
 %prep
 cd %{_builddir}
-rm -rf NVIDIA-Linux-x86*-%{_nv_ver}-pkg*
+rm -rf NVIDIA-Linux-x86*-%{version}-pkg*
 %ifarch %{ix86}
 /bin/sh %{SOURCE0} --extract-only
-%setup -qDT -n NVIDIA-Linux-x86-%{_nv_ver}-pkg1
+%setup -qDT -n NVIDIA-Linux-x86-%{version}-pkg1
 %else
 /bin/sh %{SOURCE1} --extract-only
-%setup -qDT -n NVIDIA-Linux-x86_64-%{_nv_ver}-pkg1
+%setup -qDT -n NVIDIA-Linux-x86_64-%{version}-pkg1
 %endif
 %patch0 -p1
 sed -i 's:-Wpointer-arith::' usr/src/nv/Makefile.kbuild
