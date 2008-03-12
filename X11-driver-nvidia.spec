@@ -1,8 +1,6 @@
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without distribution kernel
-%bcond_without	up		# without up packages
-%bcond_without	smp		# without smp packages
 %bcond_without	kernel		# without kernel packages
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	verbose		# verbose build (V=1)
@@ -15,25 +13,23 @@
 %endif
 
 %if "%{alt_kernel}" == "desktop" || "%{alt_kernel}" == "vanilla"
-%undefine	with_smp
-%undefine	with_up
 %define		smp_kernel	1
 %else
-%define		smp_kernel	0
+%define		smp_kernel	1
 %endif
 
 %define		pname	X11-driver-nvidia
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		%{pname}%{_alt_kernel}
-Version:	100.14.19
-Release:	63
+Version:	169.12
+Release:	1
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{version}/NVIDIA-Linux-x86-%{version}-pkg1.run
-# Source0-md5:	d2f89f60cef8f9a0cc0ce228b46eeb8b
+# Source0-md5:	c1d45a150a90e6a11da21623493a628e
 Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}-pkg1.run
-# Source1-md5:	3d702d7d67875b4b1e3095c2eb448b29
+# Source1-md5:	5f8a3a3f403a9bac572d86e57ddd0e6a
 Source2:	%{pname}-settings.desktop
 Source3:	%{pname}-xinitrc.sh
 Patch0:		%{pname}-GL.patch
@@ -131,12 +127,7 @@ Summary(pl):	Modu³ j±dra dla obs³ugi kart graficznych nVidia
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
-%if %{smp_kernel}
-%{?with_dist_kernel:%{!?with_kabi:%requires_releq_kernel}}
-%{?with_dist_kernel:%{?with_kabi:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}}
-%else
 %{?with_dist_kernel:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}
-%endif
 Provides:	X11-driver-nvidia(kernel)
 Obsoletes:	XFree86-nvidia-kernel
 
@@ -149,27 +140,6 @@ Die nVidia-Architektur-Unterstützung für den Linux-Kern.
 %description -n kernel%{_alt_kernel}-video-nvidia -l pl
 Obs³uga architektury nVidia dla j±dra Linuksa. Pakiet wymagany przez
 sterownik nVidii dla Xorg/XFree86.
-
-%package -n kernel%{_alt_kernel}-smp-video-nvidia
-Summary:	nVidia kernel module for nVidia Architecture support
-Summary(de):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
-Summary(pl):	Modu³ j±dra dla obs³ugi kart graficznych nVidia
-Group:		Base/Kernel
-Requires(post,postun):	/sbin/depmod
-Requires:	dev >= 2.7.7-10
-%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}-smp(vermagic) = %{_kernel_ver}}
-Provides:	X11-driver-nvidia(kernel)
-Obsoletes:	XFree86-nvidia-kernel
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia
-nVidia Architecture support for Linux kernel SMP.
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia -l de
-Die nVidia-Architektur-Unterstützung für den Linux-Kern SMP.
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia -l pl
-Obs³uga architektury nVidia dla j±dra Linuksa SMP. Pakiet wymagany
-przez sterownik nVidii dla Xorg/XFree86.
 
 %prep
 cd %{_builddir}
@@ -249,7 +219,7 @@ cat << EOF
  *                                                     *
  *  NOTE:                                              *
  *  You must install:                                  *
- *  kernel(24)(-smp)-video-nvidia-%{version}             *
+ *  kernel-video-nvidia-%{version}                   *
  *  for this driver to work                            *
  *                                                     *
  *******************************************************
@@ -264,12 +234,6 @@ EOF
 %postun	-n kernel%{_alt_kernel}-video-nvidia
 %depmod %{_kernel_ver}
 
-%post	-n kernel%{_alt_kernel}-smp-video-nvidia
-%depmod %{_kernel_ver}smp
-
-%postun	-n kernel%{_alt_kernel}-smp-video-nvidia
-%depmod %{_kernel_ver}smp
-
 %if %{with userspace}
 %files
 %defattr(644,root,root,755)
@@ -280,8 +244,8 @@ EOF
 %attr(755,root,root) %{_libdir}/libGLcore.so.*.*
 %attr(755,root,root) %{_libdir}/libXvMCNVIDIA.so.*.*
 %dir /usr/%{_lib}/tls
-%attr(755,root,root) /usr/%{_lib}/libnvidia-tls.so.*.*.*
-%attr(755,root,root) /usr/%{_lib}/tls/libnvidia-tls.so.*.*.*
+%attr(755,root,root) /usr/%{_lib}/libnvidia-tls.so.*.*
+%attr(755,root,root) /usr/%{_lib}/tls/libnvidia-tls.so.*.*
 %attr(755,root,root) /usr/%{_lib}/libGL.so.1
 %attr(755,root,root) /usr/%{_lib}/libGL.so
 %attr(755,root,root) %{_libdir}/modules/lib*
@@ -290,17 +254,9 @@ EOF
 %endif
 
 %if %{with kernel}
-%if %{with up} || %{smp_kernel}
 %files -n kernel%{_alt_kernel}-video-nvidia
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/misc/*.ko*
-%endif
-
-%if %{with smp} && %{with dist_kernel}
-%files -n kernel%{_alt_kernel}-smp-video-nvidia
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}smp/misc/*.ko*
-%endif
 %endif
 
 %if %{with userspace}
