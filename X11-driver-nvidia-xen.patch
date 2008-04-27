@@ -1,0 +1,12 @@
+--- NVIDIA-Linux-x86-100.14.19-pkg1/usr/src/nv/nv-linux.h~	2008-04-27 18:38:43.000000000 +0300
++++ NVIDIA-Linux-x86-100.14.19-pkg1/usr/src/nv/nv-linux.h	2008-04-27 18:38:44.938712393 +0300
+@@ -100,7 +100,9 @@
+ #include <linux/highmem.h>
+ 
+ #ifdef CONFIG_XEN
++#if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 16)
+ #include <asm/maddr.h>
++#endif
+ #include <xen/interface/memory.h>
+ #endif
+ 

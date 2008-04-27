@@ -37,6 +37,7 @@ Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Li
 Source2:	%{pname}-settings.desktop
 Source3:	%{pname}-xinitrc.sh
 Patch0:		%{pname}-GL.patch
+Patch1:		%{pname}-xen.patch
 URL:		http://www.nvidia.com/object/unix.html
 %if %{with kernel}
 BuildRequires:	%{kgcc_package}
@@ -182,6 +183,7 @@ rm -rf NVIDIA-Linux-x86*-%{version}-pkg*
 %setup -qDT -n NVIDIA-Linux-x86_64-%{version}-pkg1
 %endif
 %patch0 -p1
+%patch1 -p1
 sed -i 's:-Wpointer-arith::' usr/src/nv/Makefile.kbuild
 
 %build
