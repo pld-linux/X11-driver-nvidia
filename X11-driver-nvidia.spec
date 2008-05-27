@@ -13,27 +13,24 @@
 %if "%{_alt_kernel}" != "%{nil}"
 %undefine	with_userspace
 %endif
-
-%if "%{alt_kernel}" == "desktop" || "%{alt_kernel}" == "vanilla"
-%undefine	with_smp
-%undefine	with_up
-%define		smp_kernel	1
-%else
-%define		smp_kernel	0
+%if %{without userspace}
+# nothing to be placed to debuginfo package
+%define		_enable_debug_packages	0
 %endif
 
+%define		rel		1
 %define		pname	X11-driver-nvidia
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		%{pname}%{_alt_kernel}
-Version:	100.14.19
-Release:	65
+Version:	169.12
+Release:	%{rel}
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{version}/NVIDIA-Linux-x86-%{version}-pkg1.run
-# Source0-md5:	d2f89f60cef8f9a0cc0ce228b46eeb8b
+# Source0-md5:	c1d45a150a90e6a11da21623493a628e
 Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}-pkg1.run
-# Source1-md5:	3d702d7d67875b4b1e3095c2eb448b29
+# Source1-md5:	5f8a3a3f403a9bac572d86e57ddd0e6a
 Source2:	%{pname}-settings.desktop
 Source3:	%{pname}-xinitrc.sh
 Patch0:		%{pname}-GL.patch
@@ -42,7 +39,7 @@ URL:		http://www.nvidia.com/object/unix.html
 %if %{with kernel}
 BuildRequires:	%{kgcc_package}
 %{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
-BuildRequires:	rpmbuild(macros) >= 1.330
+BuildRequires:	rpmbuild(macros) >= 1.452
 %endif
 BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
@@ -129,15 +126,11 @@ Narzêdzia do zarz±dzania kartami graficznymi nVidia.
 Summary:	nVidia kernel module for nVidia Architecture support
 Summary(de):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
 Summary(pl):	Modu³ j±dra dla obs³ugi kart graficznych nVidia
+Release:	%{rel}@%{_kernel_vermagic}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
-%if %{smp_kernel}
-%{?with_dist_kernel:%{!?with_kabi:%requires_releq_kernel}}
-%{?with_dist_kernel:%{?with_kabi:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}}
-%else
 %{?with_dist_kernel:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}
-%endif
 Provides:	X11-driver-nvidia(kernel)
 Obsoletes:	XFree86-nvidia-kernel
 
@@ -155,6 +148,7 @@ sterownik nVidii dla Xorg/XFree86.
 Summary:	nVidia kernel module for nVidia Architecture support
 Summary(de):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
 Summary(pl):	Modu³ j±dra dla obs³ugi kart graficznych nVidia
+Release:	%{rel}@%{_kernel_vermagic}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
@@ -282,8 +276,8 @@ EOF
 %attr(755,root,root) %{_libdir}/libGLcore.so.*.*
 %attr(755,root,root) %{_libdir}/libXvMCNVIDIA.so.*.*
 %dir /usr/%{_lib}/tls
-%attr(755,root,root) /usr/%{_lib}/libnvidia-tls.so.*.*.*
-%attr(755,root,root) /usr/%{_lib}/tls/libnvidia-tls.so.*.*.*
+%attr(755,root,root) /usr/%{_lib}/libnvidia-tls.so.*.*
+%attr(755,root,root) /usr/%{_lib}/tls/libnvidia-tls.so.*.*
 %attr(755,root,root) /usr/%{_lib}/libGL.so.1
 %attr(755,root,root) /usr/%{_lib}/libGL.so
 %attr(755,root,root) %{_libdir}/modules/lib*
@@ -292,11 +286,9 @@ EOF
 %endif
 
 %if %{with kernel}
-%if %{with up} || %{smp_kernel}
 %files -n kernel%{_alt_kernel}-video-nvidia
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/misc/*.ko*
-%endif
 
 %if %{with smp} && %{with dist_kernel}
 %files -n kernel%{_alt_kernel}-smp-video-nvidia
