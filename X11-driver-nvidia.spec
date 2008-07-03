@@ -1,8 +1,6 @@
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without distribution kernel
-%bcond_without	up		# without up packages
-%bcond_without	smp		# without smp packages
 %bcond_without	kernel		# without kernel packages
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	verbose		# verbose build (V=1)
@@ -18,23 +16,22 @@
 %define		_enable_debug_packages	0
 %endif
 
-%define		rel		2
+%define		rel	2
 %define		pname	X11-driver-nvidia
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl.UTF-8):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		%{pname}%{_alt_kernel}
-Version:	169.12
+Version:	173.14.09
 Release:	%{rel}
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{version}/NVIDIA-Linux-x86-%{version}-pkg1.run
-# Source0-md5:	c1d45a150a90e6a11da21623493a628e
+# Source0-md5:	02bc9536ad2800855c66684f4c981a74
 Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}-pkg1.run
-# Source1-md5:	5f8a3a3f403a9bac572d86e57ddd0e6a
+# Source1-md5:	2d64c5bfaa028d94f9478b4e5aa3de06
 Source2:	%{pname}-settings.desktop
 Source3:	%{pname}-xinitrc.sh
 Patch0:		%{pname}-GL.patch
-Patch1:		%{pname}-xen.patch
 URL:		http://www.nvidia.com/object/unix.html
 %if %{with kernel}
 BuildRequires:	%{kgcc_package}
@@ -144,28 +141,6 @@ Die nVidia-Architektur-Unterstützung für den Linux-Kern.
 Obsługa architektury nVidia dla jądra Linuksa. Pakiet wymagany przez
 sterownik nVidii dla Xorg/XFree86.
 
-%package -n kernel%{_alt_kernel}-smp-video-nvidia
-Summary:	nVidia kernel module for nVidia Architecture support
-Summary(de.UTF-8):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
-Summary(pl.UTF-8):	Moduł jądra dla obsługi kart graficznych nVidia
-Release:	%{rel}@%{_kernel_vermagic}
-Group:		Base/Kernel
-Requires(post,postun):	/sbin/depmod
-Requires:	dev >= 2.7.7-10
-%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}-smp(vermagic) = %{_kernel_ver}}
-Provides:	X11-driver-nvidia(kernel)
-Obsoletes:	XFree86-nvidia-kernel
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia
-nVidia Architecture support for Linux kernel SMP.
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia -l de.UTF-8
-Die nVidia-Architektur-Unterstützung für den Linux-Kern SMP.
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia -l pl.UTF-8
-Obsługa architektury nVidia dla jądra Linuksa SMP. Pakiet wymagany
-przez sterownik nVidii dla Xorg/XFree86.
-
 %prep
 cd %{_builddir}
 rm -rf NVIDIA-Linux-x86*-%{version}-pkg*
@@ -177,7 +152,6 @@ rm -rf NVIDIA-Linux-x86*-%{version}-pkg*
 %setup -qDT -n NVIDIA-Linux-x86_64-%{version}-pkg1
 %endif
 %patch0 -p1
-%patch1 -p1
 sed -i 's:-Wpointer-arith::' usr/src/nv/Makefile.kbuild
 
 %build
@@ -245,7 +219,7 @@ cat << EOF
  *                                                     *
  *  NOTE:                                              *
  *  You must install:                                  *
- *  kernel(24)(-smp)-video-nvidia-%{version}             *
+ *  kernel-video-nvidia-%{version}                   *
  *  for this driver to work                            *
  *                                                     *
  *******************************************************
@@ -259,12 +233,6 @@ EOF
 
 %postun	-n kernel%{_alt_kernel}-video-nvidia
 %depmod %{_kernel_ver}
-
-%post	-n kernel%{_alt_kernel}-smp-video-nvidia
-%depmod %{_kernel_ver}smp
-
-%postun	-n kernel%{_alt_kernel}-smp-video-nvidia
-%depmod %{_kernel_ver}smp
 
 %if %{with userspace}
 %files
@@ -289,12 +257,6 @@ EOF
 %files -n kernel%{_alt_kernel}-video-nvidia
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/misc/*.ko*
-
-%if %{with smp} && %{with dist_kernel}
-%files -n kernel%{_alt_kernel}-smp-video-nvidia
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}smp/misc/*.ko*
-%endif
 %endif
 
 %if %{with userspace}
