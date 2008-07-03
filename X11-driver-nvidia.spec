@@ -16,7 +16,7 @@
 %define		_enable_debug_packages	0
 %endif
 
-%define		rel	2
+%define		rel	3
 %define		pname	X11-driver-nvidia
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl.UTF-8):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
@@ -128,8 +128,8 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
 %{?with_dist_kernel:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}
-Provides:	X11-driver-nvidia(kernel)
 Obsoletes:	XFree86-nvidia-kernel
+Obsoletes:	kernel%{_alt_kernel}-smp-video-nvidia
 
 %description -n kernel%{_alt_kernel}-video-nvidia
 nVidia Architecture support for Linux kernel.
