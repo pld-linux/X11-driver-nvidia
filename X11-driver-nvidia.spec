@@ -18,23 +18,22 @@
 %define		_enable_debug_packages	0
 %endif
 
-%define		rel		2
+%define		rel	4
 %define		pname	X11-driver-nvidia
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl.UTF-8):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
 Name:		%{pname}%{_alt_kernel}
-Version:	169.12
+Version:	173.14.09
 Release:	%{rel}
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{version}/NVIDIA-Linux-x86-%{version}-pkg1.run
-# Source0-md5:	c1d45a150a90e6a11da21623493a628e
+# Source0-md5:	02bc9536ad2800855c66684f4c981a74
 Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}-pkg1.run
-# Source1-md5:	5f8a3a3f403a9bac572d86e57ddd0e6a
+# Source1-md5:	2d64c5bfaa028d94f9478b4e5aa3de06
 Source2:	%{pname}-settings.desktop
 Source3:	%{pname}-xinitrc.sh
 Patch0:		%{pname}-GL.patch
-Patch1:		%{pname}-xen.patch
 URL:		http://www.nvidia.com/object/unix.html
 %if %{with kernel}
 BuildRequires:	%{kgcc_package}
@@ -131,7 +130,6 @@ Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
 %{?with_dist_kernel:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}
-Provides:	X11-driver-nvidia(kernel)
 Obsoletes:	XFree86-nvidia-kernel
 
 %description -n kernel%{_alt_kernel}-video-nvidia
@@ -177,7 +175,6 @@ rm -rf NVIDIA-Linux-x86*-%{version}-pkg*
 %setup -qDT -n NVIDIA-Linux-x86_64-%{version}-pkg1
 %endif
 %patch0 -p1
-%patch1 -p1
 sed -i 's:-Wpointer-arith::' usr/src/nv/Makefile.kbuild
 
 %build
