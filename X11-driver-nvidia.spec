@@ -16,7 +16,7 @@
 %define		_enable_debug_packages	0
 %endif
 
-%define		rel	3
+%define		rel	4
 %define		pname	X11-driver-nvidia
 Summary:	Linux Drivers for NVIDIA GeForce/Quadro Chips
 Summary(pl.UTF-8):	Sterowniki do kart graficznych NVIDIA GeForce/Quadro
@@ -43,10 +43,10 @@ BuildConflicts:	XFree86-nvidia
 Requires:	X11-Xserver
 Requires:	X11-libs >= 6.7.0
 Requires:	X11-modules >= 6.7.0
-Provides:	X11-OpenGL-core
-Provides:	X11-OpenGL-libGL
-Provides:	XFree86-OpenGL-core
-Provides:	XFree86-OpenGL-libGL
+Provides:	X11-OpenGL-core = 1:6.9.0
+Provides:	X11-OpenGL-libGL = 1:6.9.0
+Provides:	XFree86-OpenGL-core = 1:6.9.0
+Provides:	XFree86-OpenGL-libGL = 1:6.9.0
 Obsoletes:	Mesa
 Obsoletes:	Mesa-libGL
 Obsoletes:	X11-OpenGL-core
